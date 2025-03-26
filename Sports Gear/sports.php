@@ -1,3 +1,9 @@
+<?php
+    $dbc = mysqli_connect('localhost', 'root', '', 'warehouse_db');
+    if (!$dbc) {
+        die("Database connection failed: " . mysqli_connect_error());
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,15 +24,13 @@
         <nav class="sidebar">
             <ul>
                 <li><a href="../Home Page/home.php">Home</a></li>
-                <li><a href="../Clothes And Accessories/clothes.php">
-                    Clothes And Accessories
-                </a> </li>           
+                <li><a href="../Clothes And Accessories/clothes.php">Clothes And Accessories</a></li>           
                 <li><a href="../Furnitures And Home Decor/furnitures.php">Furnitures And Home Decor</a></li>
                 <li><a href="../Electronics/electronics.php">Electronics</a></li>
                 <li><a href="../Health And Grooming/health.php">Health And Grooming</a></li>
                 <li><a href="../Groceries/groceries.php">Groceries</a></li>
                 <li><a href="../Toiletries/toiletries.php">Toiletries</a></li>
-                <li><a href="../Books/books.html">Books</a></li>
+                <li><a href="../Books/books.php">Books</a></li>
                 <li class="current-page"><a href="../Sports Gear/sports.php">Sports Gear</a></li>
                 <li><a href="../Miscellaneous/miscellaneous.php">Miscellaneous</a></li>
             </ul>
@@ -34,114 +38,44 @@
         <main class="content">
             <h1>Collection</h1>
             <div class="card-container">
-                <div class="card">
-                    <img src="./images/cleats.jpeg" alt="cleats" class="card-image">
-                    <div class="card-content">
-                        <h2>Cleats</h2>
-                        <div class="card-details">
-                            <span class="location">Herzogenaurach, Germany</span>
-                            <span class="rating">⭐ 4.8</span>
-                            <span class="stock">899 left</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <img src="./images/footballs.jpeg" alt="footballs" class="card-image">
-                    <div class="card-content">
-                        <h2>Footballs</h2>
-                        <div class="card-details">
-                            <span class="location">Portland, USA</span>
-                            <span class="rating">⭐ 4.9</span>
-                            <span class="stock">344 left</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <img src="./images/cricketbats.jpeg" alt="cricketbats" class="card-image">
-                    <div class="card-content">
-                        <h2>Cricket Bats</h2>
-                        <div class="card-details">
-                            <span class="location">Dongguan, China</span>
-                            <span class="rating">⭐ 4.7</span>
-                            <span class="stock">1561 left</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <img src="./images/basketballs.jpeg" alt="basketballs" class="card-image">
-                    <div class="card-content">
-                        <h2>Basketballs</h2>
-                        <div class="card-details">
-                            <span class="location">Tokyo, Japan</span>
-                            <span class="rating">⭐ 4.8</span>
-                            <span class="stock">1002 left</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <img src="./images/jerseys.jpeg" alt="jerseys" class="card-image">
-                    <div class="card-content">
-                        <h2>Jerseys</h2>
-                        <div class="card-details">
-                            <span class="location">São Paulo, Brazil</span>
-                            <span class="rating">⭐ 4.6</span>
-                            <span class="stock">3228 left</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <img src="./images/racquets.jpeg" alt="racquets" class="card-image">
-                    <div class="card-content">
-                        <h2>Racquets</h2>
-                        <div class="card-details">
-                            <span class="location">Paris, France</span>
-                            <span class="rating">⭐ 4.7</span>
-                            <span class="stock">478 left</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <img src="./images/shuttles.jpeg" alt="shuttles" class="card-image">
-                    <div class="card-content">
-                        <h2>Shuttles</h2>
-                        <div class="card-details">
-                            <span class="location">Melbourne, Australia</span>
-                            <span class="rating">⭐ 4.8</span>
-                            <span class="stock">540 left</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <img src="./images/volleyballs.jpeg" alt="volleyballs" class="card-image">
-                    <div class="card-content">
-                        <h2>Volleyballs</h2>
-                        <div class="card-details">
-                            <span class="location">London, UK</span>
-                            <span class="rating">⭐ 4.6</span>
-                            <span class="stock">789 left</span>
-                        </div>
-                    </div>
-                </div>
+                <?php
+                    $categories = ['Cleats', 'Footballs', 'Cricket Bats', 'Basketballs', 'Jerseys', 'Racquets', 'Shuttles', 'Volleyballs'];
+                    foreach ($categories as $category) {
+                        $query = "SELECT * FROM sports_gear WHERE type = '$category';";
+                        $result = mysqli_query($dbc, $query);
+                        
+                        if ($row = mysqli_fetch_array($result)) {
+                            echo "<div class='card'>
+                                    <img src='./images/".strtolower(str_replace(' ', '', $category)).".jpeg' alt='$category' class='card-image'>
+                                    <div class='card-content'>
+                                        <h2>$category</h2>
+                                        <div class='card-details'>
+                                            <span class='location'>{$row['location']}</span>
+                                            <span class='rating'>⭐ ".round($row['rating'], 1)."</span>
+                                            <span class='stock'>{$row['stock']} left</span>
+                                        </div>
+                                    </div>
+                                </div>";
+                        } 
+                    }
+                ?>
             </div>
         </main>
     </div>
 
     <footer class="footer">
-
         <div class="footerTxt">
             <p class="footerTxt">&copy; WARESYNC, Inc</p>
         </div>
-      
         <div class="footerLogo">
             <img class="waresync" src="./images/waresync.png" />
         </div>
-
         <div class="logos">
             <img class="logo" src="./images/gmail.png" alt="Email">
             <img class="logo" src="./images/instagram.png" alt="Instagram">
             <img class="logo" src="./images/whatsapp.png" alt="WhatsApp">
             <img class="logo" src="./images/phone.png" alt="Phone">
-        <div>
+        </div>
     </footer>
 
     <script src="./sports.js"></script>

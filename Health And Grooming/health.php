@@ -1,3 +1,9 @@
+<?php
+    $dbc = mysqli_connect('localhost', 'root', '', 'warehouse_db');
+    if (!$dbc) {
+        die("Database connection failed: " . mysqli_connect_error());
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,9 +24,7 @@
         <nav class="sidebar">
             <ul>
                 <li><a href="../Home Page/home.php">Home</a></li>
-                <li><a href="../Clothes And Accessories/clothes.php">
-                    Clothes And Accessories
-                </a> </li>           
+                <li><a href="../Clothes And Accessories/clothes.php">Clothes And Accessories</a></li>           
                 <li><a href="../Furnitures And Home Decor/furnitures.php">Furnitures And Home Decor</a></li>
                 <li><a href="../Electronics/electronics.php">Electronics</a></li>
                 <li class="current-page"><a href="../Health And Grooming/health.php">Health And Grooming</a></li>
@@ -34,81 +38,44 @@
         <main class="content">
             <h1>Collection</h1>
             <div class="card-container">
-                <div class="card">
-                    <img src="./images/trimmers.jpeg" alt="trimmers" class="card-image">
-                    <div class="card-content">
-                        <h2>Trimmers</h2>
-                        <div class="card-details">
-                            <span class="location">Paris, France</span>
-                            <span class="rating">⭐ 4.9</span>
-                            <span class="stock">159 left</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <img src="./images/razors.jpeg" alt="razors" class="card-image">
-                    <div class="card-content">
-                        <h2>Razors</h2>
-                        <div class="card-details">
-                            <span class="location">New York, USA</span>
-                            <span class="rating">⭐ 4.8</span>
-                            <span class="stock">421 left</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <img src="./images/perfumes.jpeg" alt="perfumes" class="card-image">
-                    <div class="card-content">
-                        <h2>Perfumes</h2>
-                        <div class="card-details">
-                            <span class="location">London, UK</span>
-                            <span class="rating">⭐ 4.8</span>
-                            <span class="stock">4008 left</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <img src="./images/medicines.jpeg" alt="medicines" class="card-image">
-                    <div class="card-content">
-                        <h2>Medicines</h2>
-                        <div class="card-details">
-                            <span class="location">London, UK</span>
-                            <span class="rating">⭐ 4.5</span>
-                            <span class="stock">1092 left</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <img src="./images/deos.jpeg" alt="deos" class="card-image">
-                    <div class="card-content">
-                        <h2>Deodorants</h2>
-                        <div class="card-details">
-                            <span class="location">London, UK</span>
-                            <span class="rating">⭐ 4.7</span>
-                            <span class="stock">1527 left</span>
-                        </div>
-                    </div>
-                </div>
+                <?php
+                    $categories = ['Trimmers', 'Razors', 'Perfumes', 'Medicines', 'Deodorants'];
+                    foreach ($categories as $category) {
+                        $query = "SELECT * FROM health_and_grooming WHERE type = '$category';";
+                        $result = mysqli_query($dbc, $query);
+                        
+                        if ($row = mysqli_fetch_array($result)) {
+                            echo "<div class='card'>
+                                    <img src='./images/".strtolower(str_replace(' ', '', $category)).".jpeg' alt='$category' class='card-image'>
+                                    <div class='card-content'>
+                                        <h2>$category</h2>
+                                        <div class='card-details'>
+                                            <span class='location'>{$row['location']}</span>
+                                            <span class='rating'>⭐ ".round($row['rating'], 1)."</span>
+                                            <span class='stock'>{$row['stock']} left</span>
+                                        </div>
+                                    </div>
+                                </div>";
+                        }
+                    }
+                ?>
             </div>
         </main>
     </div>
 
     <footer class="footer">
-
         <div class="footerTxt">
             <p class="footerTxt">&copy; WARESYNC, Inc</p>
         </div>
-      
         <div class="footerLogo">
             <img class="waresync" src="./images/waresync.png" />
         </div>
-
         <div class="logos">
             <img class="logo" src="./images/gmail.png" alt="Email">
             <img class="logo" src="./images/instagram.png" alt="Instagram">
             <img class="logo" src="./images/whatsapp.png" alt="WhatsApp">
             <img class="logo" src="./images/phone.png" alt="Phone">
-        <div>
+        </div>
     </footer>
 
     <script src="./health.js"></script>
