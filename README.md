@@ -5,9 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Go to Page</title>
 </head>
 <body>
-    <a href="waresync.great-site.net">Go to the page</a>
+    <a href="http://waresync.great-site.net">Go to the page</a>
 </body>
 </html>
